@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: backend-study
+  profiles:
+    active: test
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:testdb;MODE=MySQL;DB_CLOSE_DELAY=-1;INIT=RUNSCRIPT FROM 'classpath:sql/create.sql'
+    username: sa
+    password:
+  jpa:
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+        use_sql_comments: true
+        hbm2ddl.auto: create # DDL 애플리케이션 실행 시점 DB 테이블 자동 생성 , 로컬 테스트 혹은 개발 서버에 적합
+        id.new_generator_mappings: true
+    database-platform: org.hibernate.dialect.H2Dialect
+
+logging:
+  level:
+    org:
+      hibernate:
+        type:
+          descriptor:
+            sql: trace
