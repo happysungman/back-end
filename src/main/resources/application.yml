@@ -1,5 +1,28 @@
+server:
+  port: 8080
+
 spring:
   application:
     name: backend-study
   profiles:
     active: local
+  datasource:
+    backend:
+      leader:
+        pool-name: backend-leader-hikari-pool
+        driver-class-name: org.mariadb.jdbc.Driver
+        jdbc-url: jdbc:mariadb://localhost:3307/backend-study?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+        connection-test-query: SELECT 1
+      follower:
+        pool-name: backend-follower-hikari-pool
+        driver-class-name: org.mariadb.jdbc.Driver
+        jdbc-url: jdbc:mariadb://localhost:3307/backend-study?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+        connection-test-query: SELECT 1
+        isReadOnly: true
+  jpa:
+    properties:
+      hibernate:
+        format_sql: true
+    show-sql: true
+#    database: MYSQL
+    database-platform: org.hibernate.dialect.MariaDBDialect
