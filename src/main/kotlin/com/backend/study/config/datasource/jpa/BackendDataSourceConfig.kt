@@ -24,7 +24,11 @@ import javax.sql.DataSource
 @Configuration
 @EnableTransactionManagement
 @EntityScan("com.backend.study.repository.jpa.entity")
-@EnableJpaRepositories("com.backend.study.repository.jpa")
+@EnableJpaRepositories(
+    "com.backend.study.repository.jpa",
+    entityManagerFactoryRef = "entityManagerFactory",
+    transactionManagerRef = "backendTransactionManager"
+)
 class BackendDataSourceConfig {
 
     @Bean("backendLeaderHikariConfig")
