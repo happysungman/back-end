@@ -9,12 +9,16 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories
-import org.springframework.jdbc.datasource.DataSourceTransactionManager
 import org.springframework.jdbc.datasource.LazyConnectionDataSourceProxy
 import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource
+import org.springframework.orm.jpa.JpaTransactionManager
+import org.springframework.orm.jpa.JpaVendorAdapter
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter
 import org.springframework.transaction.PlatformTransactionManager
 import org.springframework.transaction.annotation.EnableTransactionManagement
 import org.springframework.transaction.support.TransactionSynchronizationManager
+import javax.persistence.EntityManagerFactory
 import javax.sql.DataSource
 
 @Configuration
@@ -52,9 +56,25 @@ class BackendDataSourceConfig {
     fun lazyConnectionDataSource(@Qualifier("backendRoutingDataSource") dataSource: DataSource):
             DataSource = LazyConnectionDataSourceProxy(dataSource)
 
+//    @Bean("backendTransactionManager")
+//    fun transactionManager(@Qualifier("backendLazyConnectionDataSource") dataSource: DataSource):
+//            PlatformTransactionManager = DataSourceTransactionManager(dataSource)
+
+    @Bean("entityManagerFactory")
+    fun entityManagerFactory(@Qualifier("backendLazyConnectionDataSource") dataSource: DataSource): LocalContainerEntityManagerFactoryBean {
+        val localContainerEntityManagerFactoryBean = LocalContainerEntityManagerFactoryBean()
+        localContainerEntityManagerFactoryBean.dataSource = dataSource
+        localContainerEntityManagerFactoryBean.setPackagesToScan("com.backend.study.repository.jpa")
+
+        val jpaVendorAdapter: JpaVendorAdapter = HibernateJpaVendorAdapter()
+        localContainerEntityManagerFactoryBean.jpaVendorAdapter = jpaVendorAdapter
+
+        return localContainerEntityManagerFactoryBean
+    }
+
     @Bean("backendTransactionManager")
-    fun transactionManager(@Qualifier("backendLazyConnectionDataSource") dataSource: DataSource):
-            PlatformTransactionManager = DataSourceTransactionManager(dataSource)
+    fun transactionManager (@Qualifier("entityManagerFactory") entityManagerFactory: EntityManagerFactory):
+            PlatformTransactionManager = JpaTransactionManager(entityManagerFactory)
 
     internal class ReplicationRoutingDataSource(leader: DataSource, follower: DataSource): AbstractRoutingDataSource() {
 
