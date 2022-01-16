@@ -6,13 +6,6 @@ spring:
     name: backend-study
   profiles:
     active: local
-  mvc:
-    pathmatch:
-      matching-strategy: ant_path_matcher
-  security:
-    user:
-      name: user
-      password: backend
   datasource:
     backend:
       leader:
