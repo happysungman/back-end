@@ -40,23 +40,33 @@ dependencies {
     implementation("org.mybatis.spring.boot:mybatis-spring-boot-starter:2.2.1")
     implementation("org.springframework.kafka:spring-kafka")
     compileOnly("org.projectlombok:lombok")
+
     runtimeOnly("com.h2database:h2")
-    runtimeOnly("dev.miku:r2dbc-mysql")
     runtimeOnly("io.r2dbc:r2dbc-h2")
-    runtimeOnly("mysql:mysql-connector-java")
+//    runtimeOnly("dev.miku:r2dbc-mysql")
+//    runtimeOnly("mysql:mysql-connector-java")
+
     runtimeOnly("org.mariadb.jdbc:mariadb-java-client")
-    implementation(group = "io.netty",name = "netty-resolver-dns-native-macos", version = "4.1.70.Final", classifier = "osx-aarch_64")
+    implementation("org.mariadb:r2dbc-mariadb:1.0.3")
+    implementation("io.r2dbc:r2dbc-pool:0.8.8.RELEASE")
+
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     annotationProcessor("org.projectlombok:lombok")
-    testImplementation("org.springframework.boot:spring-boot-starter-test") {
-        exclude(module = "mockito-core")
-    }
+
+    implementation("io.springfox:springfox-boot-starter:3.0.0")
+
+    implementation(
+        group = "io.netty",
+        name = "netty-resolver-dns-native-macos",
+        version = "4.1.70.Final",
+        classifier = "osx-aarch_64"
+    )
+
+    testImplementation("org.springframework.boot:spring-boot-starter-test") { exclude(module = "mockito-core") }
     testImplementation("io.projectreactor:reactor-test")
     testImplementation("org.springframework.amqp:spring-rabbit-test")
     testImplementation("org.springframework.kafka:spring-kafka-test")
     testImplementation("org.springframework.security:spring-security-test")
-
-    implementation("io.springfox:springfox-boot-starter:3.0.0")
 
     testImplementation("io.kotest:kotest-runner-junit5:5.0.2")
     testImplementation("io.kotest:kotest-assertions-core:5.0.2")
