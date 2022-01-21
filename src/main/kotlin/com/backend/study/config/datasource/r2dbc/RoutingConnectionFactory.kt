@@ -10,16 +10,23 @@ class RoutingConnectionFactory(leader: ConnectionFactory, follower: ConnectionFa
     AbstractRoutingConnectionFactory() {
     override fun determineCurrentLookupKey(): Mono<Any> = TransactionSynchronizationManager.forCurrentTransaction()
         .flatMap {
-            if (it.isActualTransactionActive && it.isCurrentTransactionReadOnly) Mono.just(FOLLOWER) else Mono.just(
-                LEADER
+            logger().info(
+                "currentTransactionName: ${it.currentTransactionName}, " +
+                        "isActualTransactionActive: ${it.isActualTransactionActive}, " +
+                        "isCurrentTransactionReadOnly: ${it.isCurrentTransactionReadOnly}"
             )
+
+            if (it.isActualTransactionActive && it.isCurrentTransactionReadOnly) Mono.just(FOLLOWER)
+            else Mono.just(LEADER)
         }
         .doOnSuccess { logger().info("determined key : $it") }
-        .onErrorReturn(LEADER)
+        .doOnError { logger().info("not determined by error : $it") }
+        .onErrorReturn(FOLLOWER)
 
     init {
-        setDefaultTargetConnectionFactory(leader)
+        setDefaultTargetConnectionFactory(follower)
         setTargetConnectionFactories(mapOf(LEADER to leader, FOLLOWER to follower))
+        afterPropertiesSet()
     }
 
     companion object {

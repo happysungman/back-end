@@ -9,17 +9,45 @@ spring:
 #    username: sa
 #    password:
     backend:
-      leader:
-        pool-name: backend-leader-hikari-pool
-        driver-class-name: org.h2.Driver
-        jdbc-url: jdbc:h2:mem:testdb;MODE=MySQL;DATABASE_TO_LOWER=TRUE;DB_CLOSE_DELAY=-1;CASE_INSENSITIVE_IDENTIFIERS=TRUE;INIT=RUNSCRIPT FROM 'classpath:sql/create.sql'
-        connection-test-query: SELECT 1
-      follower:
-        pool-name: backend-follower-hikari-pool
-        driver-class-name: org.h2.Driver
-        jdbc-url: jdbc:h2:mem:testdb;MODE=MySQL;DATABASE_TO_LOWER=TRUE;DB_CLOSE_DELAY=-1;CASE_INSENSITIVE_IDENTIFIERS=TRUE
-        connection-test-query: SELECT 1
-        read-only: true
+      jpa:
+        leader:
+          pool-name: backend-leader-hikari-pool
+          driver-class-name: org.h2.Driver
+          jdbc-url: jdbc:h2:mem:testdb;MODE=MySQL;DATABASE_TO_LOWER=TRUE;DB_CLOSE_DELAY=-1;CASE_INSENSITIVE_IDENTIFIERS=TRUE;INIT=RUNSCRIPT FROM 'classpath:sql/create.sql'
+          connection-test-query: SELECT 1
+        follower:
+          pool-name: backend-follower-hikari-pool
+          driver-class-name: org.h2.Driver
+          jdbc-url: jdbc:h2:mem:testdb;MODE=MySQL;DATABASE_TO_LOWER=TRUE;DB_CLOSE_DELAY=-1;CASE_INSENSITIVE_IDENTIFIERS=TRUE
+          connection-test-query: SELECT 1
+          read-only: true
+      r2dbc:
+        leader:
+          protocol: mariadb
+          host: localhost
+          port: 3307
+          database: shop
+          username: root
+          password: backend
+          pool:
+            name: backend-leader-r2dbc-pool
+            initial-size: 2
+            max-size: 5
+            max-idle-time: 10
+            validation-query: SELECT 1
+        follower:
+          protocol: mariadb
+          host: localhost
+          port: 3307
+          database: shop
+          username: read_user
+          password: readonly
+          pool:
+            name: backend-follower-r2dbc-pool
+            initial-size: 2
+            max-size: 5
+            max-idle-time: 10
+            validation-query: SELECT 1
   jpa:
     properties:
       hibernate:

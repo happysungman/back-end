@@ -32,11 +32,11 @@ import javax.sql.DataSource
 class BackendDataSourceConfig {
 
     @Bean("backendLeaderHikariConfig")
-    @ConfigurationProperties(prefix = "spring.datasource.backend.leader")
+    @ConfigurationProperties(prefix = "spring.datasource.backend.jpa.leader")
     fun leaderHikariConfig(): HikariConfig = HikariConfig()
 
     @Bean("backendFollowerHikariConfig")
-    @ConfigurationProperties(prefix = "spring.datasource.backend.follower")
+    @ConfigurationProperties(prefix = "spring.datasource.backend.jpa.follower")
     fun followerHikariConfig(): HikariConfig = HikariConfig()
 
     @Bean("backendLeaderDataSource")

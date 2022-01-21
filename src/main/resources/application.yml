@@ -26,17 +26,31 @@ spring:
           read-only: true
       r2dbc:
         leader:
+          protocol: mariadb
           host: localhost
           port: 3307
           database: shop
           username: root
           password: backend
+          pool:
+            name: backend-leader-r2dbc-pool
+            initial-size: 2
+            max-size: 5
+            max-idle-time: 10
+            validation-query: SELECT 1
         follower:
+          protocol: mariadb
           host: localhost
           port: 3307
           database: shop
           username: read_user
           password: readonly
+          pool:
+            name: backend-follower-r2dbc-pool
+            initial-size: 2
+            max-size: 5
+            max-idle-time: 10
+            validation-query: SELECT 1
   jpa:
     properties:
       hibernate:

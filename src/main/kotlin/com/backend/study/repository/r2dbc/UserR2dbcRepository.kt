@@ -1,6 +1,9 @@
 package com.backend.study.repository.r2dbc
 
 import com.backend.study.repository.r2dbc.entity.User
-import org.springframework.data.r2dbc.repository.R2dbcRepository
+import org.springframework.data.repository.reactive.ReactiveCrudRepository
+import org.springframework.stereotype.Repository
 
-interface UserR2dbcRepository : R2dbcRepository<User, String>
+@Repository
+interface UserR2dbcRepository : ReactiveCrudRepository<User, String> {
+}

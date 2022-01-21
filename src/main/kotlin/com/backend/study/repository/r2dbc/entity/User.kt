@@ -9,12 +9,14 @@ import java.time.LocalDateTime
 @Table("user")
 data class User(
     @Id
-    var userId: Int,
+    var id: Int?,
+
+    var userId: String,
 
     var name: String,
 
     var birthday: LocalDate,
 
     @CreatedDate
-    var createdAt: LocalDateTime
+    var createdAt: LocalDateTime?
 )
